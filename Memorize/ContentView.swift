@@ -1,0 +1,77 @@
+//
+//  ContentView.swift
+//  Memorize
+//
+//  Created by Abhishek Satpathy on 02/03/23.
+//
+
+import SwiftUI
+
+struct Card: View{
+    @State var isFaceUp: Bool = true;
+    var content: String;
+    var body: some View{
+        let shape = RoundedRectangle(cornerRadius: 15);
+       
+        ZStack{
+            if isFaceUp{
+                shape.fill().foregroundColor(.white)
+                
+                shape.strokeBorder(.red,lineWidth:3)
+                
+                Text(content).font(.largeTitle)
+            }else{
+                shape.foregroundColor(.red)
+            }
+        }.onTapGesture {
+            isFaceUp.toggle()
+        }
+    }
+}
+
+
+struct ContentView: View {
+    var emojis = ["🛳","✈️","🚀","⛵️","🏎","🚞","🛺","🛻","🚝","🛴"]
+    @State var emojiCount = 5
+    
+ 
+    var body: some View {
+            VStack{
+                ScrollView{
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 70))],spacing: 20.0){
+                        ForEach(emojis[0..<emojiCount],id: \.self,  content: {emoji in
+                            Card(content: emoji).aspectRatio(2/3,contentMode: .fit).padding(.leading, 5.0)
+                        })
+                    }
+                }
+                
+                Spacer()
+                
+                HStack{
+                    Button(action: {
+                        if(emojiCount>1){
+                            emojiCount = emojiCount - 1
+                        }
+                    }, label: {
+                        Image(systemName: "minus.circle").font(.largeTitle)
+                    })
+                    
+                    Spacer()
+                    
+                    Button(action: {
+                        if(emojiCount<emojis.count){
+                            emojiCount = emojiCount + 1
+                        }
+                    }, label: {
+                        Image(systemName: "plus.circle").font(.largeTitle)
+                    })
+                }
+            }.padding()
+    }
+}
+
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView().preferredColorScheme(.dark)
+    }
+}
