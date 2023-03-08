@@ -13,7 +13,9 @@ class MemorizeGameViewModel: ObservableObject{
     
     static func createMemoryGame() -> MemorizeGameModel<String>{
         
-        MemorizeGameModel<String>(numberOfPairsOfCards: 5){index in emojis[index]}
+        var model = MemorizeGameModel<String>(numberOfPairsOfCards: 10){index in emojis[index]}
+        model.shuffleCards()
+        return model
     }
     
     @Published private(set) var model: MemorizeGameModel = createMemoryGame()
@@ -28,5 +30,12 @@ class MemorizeGameViewModel: ObservableObject{
 //        model.addCardPair(content: MemorizeGameViewModel.emojis[6])
 //    }
      
+    func isGameFinished() -> Bool{
+        return model.finishedGame
+    }
+    
+//    func shuffleCards(){
+//        model.shuffleCards()
+//    }
     
 }

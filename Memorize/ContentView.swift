@@ -36,6 +36,7 @@ struct ContentView: View {
     @ObservedObject var viewModel:MemorizeGameViewModel = MemorizeGameViewModel()
  
     var body: some View {
+        if !viewModel.isGameFinished(){
             VStack{
                 ScrollView{
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 70))],spacing: 20.0){
@@ -50,27 +51,35 @@ struct ContentView: View {
                 
                 Spacer()
                 
-//                HStack{
-//                    Button(action: {
-////                        if(emojiCount>1){
-////                            emojiCount = emojiCount - 1
-//                        }
-//                    }, label: {
-//                        Image(systemName: "minus.circle").font(.largeTitle)
-//                    })
-
-//                    Spacer()
-
-//                    Button(action: {
-//                        if(emojiCount<emojis.count){
-//                            emojiCount = emojiCount + 1
-//                        }
-//                        viewModel.addCardPair()
-//                    }, label: {
-//                        Image(systemName: "plus.circle").font(.largeTitle)
-//                    })
+                //                HStack{
+                //                    Button(action: {
+                ////                        if(emojiCount>1){
+                ////                            emojiCount = emojiCount - 1
+                //                        }
+                //                    }, label: {
+                //                        Image(systemName: "minus.circle").font(.largeTitle)
+                //                    })
+                
+                //                    Spacer()
+                
+                //                    Button(action: {
+                //                        if(emojiCount<emojis.count){
+                //                            emojiCount = emojiCount + 1
+                //                        }
+                //                        viewModel.addCardPair()
+                //                    }, label: {
+                //                        Image(systemName: "plus.circle").font(.largeTitle)
+                //                    })
+                //                }
+                
+//                Image(systemName: "shuffle.circle").font(.largeTitle).foregroundColor(.blue).onTapGesture {
+//                    viewModel.shuffleCards()
 //                }
+                
             }.padding()
+        }else{
+            Text("Wohooo!! Game Over")
+        }
     }
 }
 
