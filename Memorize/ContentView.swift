@@ -20,6 +20,9 @@ struct Card: View{
                 shape.strokeBorder(.red,lineWidth:3)
                 
                 Text(cardDetails.content).font(.largeTitle)
+            }
+            else if cardDetails.isMatched{
+                    shape.opacity(0)
             }else{
                 shape.foregroundColor(.red)
             }
@@ -39,6 +42,7 @@ struct ContentView: View {
                         ForEach(viewModel.model.cards, content: {card in
                             Card(cardDetails: card).aspectRatio(2/3,contentMode: .fit).padding(.leading, 5.0).onTapGesture {
                                 viewModel.chooseCard(card)
+                                
                             }
                         })
                     }
