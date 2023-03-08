@@ -13,7 +13,8 @@ struct MemorizeGameModel<CardContent> where CardContent: Equatable{
     private var onlyFaceUpCardIndex:Int?
     private var pairsMatched = 0
     private var numberOfPairsOfCards:Int
-    private(set) var finishedGame = false
+    private(set) var isGameFinished = false
+    private(set) var totalMoves = 0
     
     init(numberOfPairsOfCards: Int, content: (Int) -> CardContent) {
         cards = Array<Card>()
@@ -29,13 +30,14 @@ struct MemorizeGameModel<CardContent> where CardContent: Equatable{
     
     mutating func chooseCard(_ card: Card){
         if let chosenCardIndex = cards.firstIndex(where: {$0.id == card.id}), !cards[chosenCardIndex].isFaceUp, !cards[chosenCardIndex].isMatched{
+            totalMoves+=1
             if let faceUpCardIndex = onlyFaceUpCardIndex {
                 if cards[faceUpCardIndex].content == cards[chosenCardIndex].content {
                     cards[faceUpCardIndex].isMatched = true
                     cards[chosenCardIndex].isMatched = true
                     pairsMatched+=1
                     if(pairsMatched == numberOfPairsOfCards){
-                        finishedGame = true
+                        isGameFinished = true
                     }
                 }
                 onlyFaceUpCardIndex = nil
@@ -63,6 +65,10 @@ struct MemorizeGameModel<CardContent> where CardContent: Equatable{
             }
         }
         cards.shuffle()
+    }
+    
+    func getTotalMoves() -> Int{
+        totalMoves
     }
     
     

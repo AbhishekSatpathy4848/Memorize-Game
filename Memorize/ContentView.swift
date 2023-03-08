@@ -39,7 +39,7 @@ struct ContentView: View {
         if !viewModel.isGameFinished(){
             VStack{
                 ScrollView{
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 70))],spacing: 20.0){
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))],spacing: 20.0){
                         ForEach(viewModel.model.cards, content: {card in
                             Card(cardDetails: card).aspectRatio(2/3,contentMode: .fit).padding(.leading, 5.0).onTapGesture {
                                 viewModel.chooseCard(card)
@@ -50,6 +50,8 @@ struct ContentView: View {
                 }
                 
                 Spacer()
+                
+                Text("Score: \(viewModel.getTotalMoves())").font(.largeTitle)
                 
                 //                HStack{
                 //                    Button(action: {
@@ -78,7 +80,10 @@ struct ContentView: View {
                 
             }.padding()
         }else{
-            Text("Wohooo!! Game Over")
+            VStack{
+                Text("Wohooo!! Game Completed").font(.largeTitle)
+                Text("Score: \(viewModel.getTotalMoves())").font(.largeTitle)
+            }
         }
     }
 }

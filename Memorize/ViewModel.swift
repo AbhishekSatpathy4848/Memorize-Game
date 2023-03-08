@@ -31,11 +31,15 @@ class MemorizeGameViewModel: ObservableObject{
 //    }
      
     func isGameFinished() -> Bool{
-        return model.finishedGame
+        return model.isGameFinished
     }
     
 //    func shuffleCards(){
 //        model.shuffleCards()
 //    }
+    
+    func getTotalMoves() -> Int{
+        model.getTotalMoves()
+    }
     
 }
