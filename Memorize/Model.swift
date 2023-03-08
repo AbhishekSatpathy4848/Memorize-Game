@@ -12,20 +12,19 @@ struct MemorizeGameModel<CardContent>{
     private var current_id = 0
     
     mutating func chooseCard(_ card: Card){
-        let cardIndex = index(of:card)
-        if(cardIndex == -1) {return}
-        cards[cardIndex].isFaceUp.toggle()
-        print("toggled")
+        if let index = cards.firstIndex(where: {$0.id == card.id}){
+            cards[index].isFaceUp.toggle()
+        }
     }
     
-    func index(of card: Card) -> Int{
-        for index in 0..<cards.count{
-            if cards[index].id == card.id{
-                return index
-            }
-        }
-        return -1
-    }
+//    func index(of card: Card) -> Int{
+//        for index in 0..<cards.count{
+//            if cards[index].id == card.id{
+//                return index
+//            }
+//        }
+//        return -1
+//    }
     
     init(numberOfPairsOfCards: Int, content: (Int) -> CardContent) {
         cards = Array<Card>()
