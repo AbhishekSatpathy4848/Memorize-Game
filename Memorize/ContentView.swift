@@ -8,64 +8,64 @@
 import SwiftUI
 
 struct Card: View{
-    @State var isFaceUp: Bool = true;
-    var content: String;
+    var cardDetails: MemorizeGameModel<String>.Card
+    
     var body: some View{
         let shape = RoundedRectangle(cornerRadius: 15);
        
         ZStack{
-            if isFaceUp{
+            if cardDetails.isFaceUp{
                 shape.fill().foregroundColor(.white)
                 
                 shape.strokeBorder(.red,lineWidth:3)
                 
-                Text(content).font(.largeTitle)
+                Text(cardDetails.content).font(.largeTitle)
             }else{
                 shape.foregroundColor(.red)
             }
-        }.onTapGesture {
-            isFaceUp.toggle()
         }
     }
 }
 
 
 struct ContentView: View {
-    var emojis = ["🛳","✈️","🚀","⛵️","🏎","🚞","🛺","🛻","🚝","🛴"]
-    @State var emojiCount = 5
     
+    @ObservedObject var viewModel:MemorizeGameViewModel = MemorizeGameViewModel()
  
     var body: some View {
             VStack{
                 ScrollView{
                     LazyVGrid(columns: [GridItem(.adaptive(minimum: 70))],spacing: 20.0){
-                        ForEach(emojis[0..<emojiCount],id: \.self,  content: {emoji in
-                            Card(content: emoji).aspectRatio(2/3,contentMode: .fit).padding(.leading, 5.0)
+                        ForEach(viewModel.model.cards, content: {card in
+                            Card(cardDetails: card).aspectRatio(2/3,contentMode: .fit).padding(.leading, 5.0).onTapGesture {
+                                viewModel.chooseCard(card)
+                            }
                         })
                     }
                 }
                 
                 Spacer()
                 
-                HStack{
-                    Button(action: {
-                        if(emojiCount>1){
-                            emojiCount = emojiCount - 1
-                        }
-                    }, label: {
-                        Image(systemName: "minus.circle").font(.largeTitle)
-                    })
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        if(emojiCount<emojis.count){
-                            emojiCount = emojiCount + 1
-                        }
-                    }, label: {
-                        Image(systemName: "plus.circle").font(.largeTitle)
-                    })
-                }
+//                HStack{
+//                    Button(action: {
+////                        if(emojiCount>1){
+////                            emojiCount = emojiCount - 1
+//                        }
+//                    }, label: {
+//                        Image(systemName: "minus.circle").font(.largeTitle)
+//                    })
+
+//                    Spacer()
+
+//                    Button(action: {
+//                        if(emojiCount<emojis.count){
+//                            emojiCount = emojiCount + 1
+//                        }
+//                        viewModel.addCardPair()
+//                    }, label: {
+//                        Image(systemName: "plus.circle").font(.largeTitle)
+//                    })
+//                }
             }.padding()
     }
 }
