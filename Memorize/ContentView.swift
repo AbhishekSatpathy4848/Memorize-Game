@@ -33,7 +33,7 @@ struct Card: View{
 
 struct ContentView: View {
     
-    @ObservedObject var viewModel:MemorizeGameViewModel = MemorizeGameViewModel()
+    @ObservedObject var viewModel:MemorizeGameViewModel
  
     var body: some View {
         if !viewModel.isGameFinished(){
@@ -90,6 +90,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().preferredColorScheme(.dark)
+        ContentView(viewModel: MemorizeGameViewModel()).preferredColorScheme(.dark)
     }
 }

@@ -9,8 +9,11 @@ import Foundation
 
 struct MemorizeGameModel<CardContent> where CardContent: Equatable{
     private(set) var cards: Array<Card>
-    private var current_id = 0
-    private var onlyFaceUpCardIndex:Int?
+    private var current_card_id = 0
+    private var onlyFaceUpCardIndex:Int? {
+        get {cards.indices.filter{cards[$0].isFaceUp}.onlyOneElement}
+        set{cards.indices.forEach{cards[$0].isFaceUp = ($0 == newValue)}}
+    }
     private var pairsMatched = 0
     private var numberOfPairsOfCards:Int
     private(set) var isGameFinished = false
@@ -20,14 +23,14 @@ struct MemorizeGameModel<CardContent> where CardContent: Equatable{
         cards = Array<Card>()
         self.numberOfPairsOfCards = numberOfPairsOfCards
         for pairIndex in 0..<numberOfPairsOfCards{
-            current_id+=1
-            cards.append(Card(id: current_id, content: content(pairIndex)))
-            current_id+=1
-            cards.append(Card(id: current_id, content: content(pairIndex)))
+            current_card_id+=1
+            cards.append(Card(id: current_card_id, content: content(pairIndex)))
+            current_card_id+=1
+            cards.append(Card(id: current_card_id, content: content(pairIndex)))
         }
-        current_id+=1
+        current_card_id+=1
     }
-    
+     
     mutating func chooseCard(_ card: Card){
         if let chosenCardIndex = cards.firstIndex(where: {$0.id == card.id}), !cards[chosenCardIndex].isFaceUp, !cards[chosenCardIndex].isMatched{
             totalMoves+=1
@@ -40,22 +43,18 @@ struct MemorizeGameModel<CardContent> where CardContent: Equatable{
                         isGameFinished = true
                     }
                 }
-                onlyFaceUpCardIndex = nil
+                cards[chosenCardIndex].isFaceUp.toggle()
             }else{
-                for index in 0..<cards.count{
-                    cards[index].isFaceUp = false
-                }
                 onlyFaceUpCardIndex = chosenCardIndex
             }
-            cards[chosenCardIndex].isFaceUp.toggle()
         }
     }
     
     mutating func addCardPair(content: CardContent){
-        cards.append(Card(id: current_id, content: content))
-        current_id+=1
-        cards.append(Card(id: current_id, content: content))
-        current_id+=1
+        cards.append(Card(id: current_card_id, content: content))
+        current_card_id+=1
+        cards.append(Card(id: current_card_id, content: content))
+        current_card_id+=1
     }
     
     mutating func shuffleCards(){
@@ -77,5 +76,15 @@ struct MemorizeGameModel<CardContent> where CardContent: Equatable{
         var content: CardContent
         var isMatched: Bool = false
         var isFaceUp: Bool = false
+    }
+}
+
+extension Array{
+    var onlyOneElement: Element? {
+        if self.count == 1{
+            return self.first
+        }else{
+            return nil
+        }
     }
 }
