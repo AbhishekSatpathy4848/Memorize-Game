@@ -39,7 +39,7 @@ struct ContentView: View {
         if !viewModel.isGameFinished(){
             VStack{
                 ScrollView{
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 140))],spacing: 20.0){
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: UIScreen.main.bounds.size.width/6))],spacing: 20.0){
                         ForEach(viewModel.model.cards, content: {card in
                             Card(cardDetails: card).aspectRatio(2/3,contentMode: .fit).padding(.leading, 5.0).onTapGesture {
                                 viewModel.chooseCard(card)
@@ -90,6 +90,6 @@ struct ContentView: View {
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView(viewModel: MemorizeGameViewModel()).preferredColorScheme(.dark)
+        ContentView(viewModel: MemorizeGameViewModel()).preferredColorScheme(.light)
     }
 }
