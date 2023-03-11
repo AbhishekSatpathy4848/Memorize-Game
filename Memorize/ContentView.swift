@@ -11,24 +11,30 @@ struct Card: View{
     var cardDetails: MemorizeGameModel<String>.Card
     
     var body: some View{
-        let shape = RoundedRectangle(cornerRadius: 15);
-       
-        ZStack{
-            if cardDetails.isFaceUp{
-                shape.fill().foregroundColor(.white)
-                
-                shape.strokeBorder(.red,lineWidth:3)
-                
-                Text(cardDetails.content).font(.largeTitle)
-            }
-            else if cardDetails.isMatched{
-                    shape.opacity(0)
-            }else{
-                shape.foregroundColor(.red)
-            }
-        }
+        let shape = RoundedRectangle(cornerRadius: DrawingConstants.cardCornerRadius);
+            GeometryReader(content: {geometry in
+                ZStack{
+                    if cardDetails.isFaceUp{
+                        shape.fill().foregroundColor(.white)
+                        
+                        shape.strokeBorder(.red,lineWidth:DrawingConstants.cardBorderLineWidth)
+                        
+                        Text(cardDetails.content).font(cardContentFontSize(size: geometry.size))
+                    }
+                    else if cardDetails.isMatched{
+                        shape.opacity(0)
+                    }else{
+                        shape.foregroundColor(.red)
+                    }
+                }
+            })
+    }
+    
+    func cardContentFontSize(size: CGSize) -> Font {
+        Font.system(size: size.width * DrawingConstants.cardContentScalingFactor)
     }
 }
+
 
 
 struct ContentView: View {
@@ -92,4 +98,11 @@ struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
         ContentView(viewModel: MemorizeGameViewModel()).preferredColorScheme(.light)
     }
+}
+
+private struct DrawingConstants{
+    static let cardContentScalingFactor = 0.5
+    static let cardBorderLineWidth:CGFloat = 3
+    static let cardCornerRadius:CGFloat = 15
+    
 }
