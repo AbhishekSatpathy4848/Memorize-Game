@@ -8,70 +8,101 @@
 import SwiftUI
 
 struct Card: View{
-    @State var isFaceUp: Bool = true;
-    var content: String;
+    var cardDetails: MemorizeGameModel<String>.Card
+    
     var body: some View{
-        let shape = RoundedRectangle(cornerRadius: 15);
-       
-        ZStack{
-            if isFaceUp{
-                shape.fill().foregroundColor(.white)
-                
-                shape.strokeBorder(.red,lineWidth:3)
-                
-                Text(content).font(.largeTitle)
-            }else{
-                shape.foregroundColor(.red)
-            }
-        }.onTapGesture {
-            isFaceUp.toggle()
-        }
+        let shape = RoundedRectangle(cornerRadius: DrawingConstants.cardCornerRadius);
+            GeometryReader(content: {geometry in
+                ZStack{
+                    if cardDetails.isFaceUp{
+                        shape.fill().foregroundColor(.white)
+                        
+                        shape.strokeBorder(.red,lineWidth:DrawingConstants.cardBorderLineWidth)
+                        
+                        Text(cardDetails.content).font(cardContentFontSize(size: geometry.size))
+                    }
+                    else if cardDetails.isMatched{
+                        shape.opacity(0)
+                    }else{
+                        shape.foregroundColor(.red)
+                    }
+                }
+            })
+    }
+    
+    func cardContentFontSize(size: CGSize) -> Font {
+        Font.system(size: size.width * DrawingConstants.cardContentScalingFactor)
     }
 }
 
 
+
 struct ContentView: View {
-    var emojis = ["🛳","✈️","🚀","⛵️","🏎","🚞","🛺","🛻","🚝","🛴"]
-    @State var emojiCount = 5
     
+    @ObservedObject var viewModel:MemorizeGameViewModel
  
     var body: some View {
+        if !viewModel.isGameFinished(){
             VStack{
                 ScrollView{
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: 70))],spacing: 20.0){
-                        ForEach(emojis[0..<emojiCount],id: \.self,  content: {emoji in
-                            Card(content: emoji).aspectRatio(2/3,contentMode: .fit).padding(.leading, 5.0)
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: UIScreen.main.bounds.size.width/6))],spacing: 20.0){
+                        ForEach(viewModel.model.cards, content: {card in
+                            Card(cardDetails: card).aspectRatio(2/3,contentMode: .fit).padding(.leading, 5.0).onTapGesture {
+                                viewModel.chooseCard(card)
+                                
+                            }
                         })
                     }
                 }
                 
                 Spacer()
                 
-                HStack{
-                    Button(action: {
-                        if(emojiCount>1){
-                            emojiCount = emojiCount - 1
-                        }
-                    }, label: {
-                        Image(systemName: "minus.circle").font(.largeTitle)
-                    })
-                    
-                    Spacer()
-                    
-                    Button(action: {
-                        if(emojiCount<emojis.count){
-                            emojiCount = emojiCount + 1
-                        }
-                    }, label: {
-                        Image(systemName: "plus.circle").font(.largeTitle)
-                    })
-                }
+                Text("Score: \(viewModel.getTotalMoves())").font(.largeTitle)
+                
+                //                HStack{
+                //                    Button(action: {
+                ////                        if(emojiCount>1){
+                ////                            emojiCount = emojiCount - 1
+                //                        }
+                //                    }, label: {
+                //                        Image(systemName: "minus.circle").font(.largeTitle)
+                //                    })
+                
+                //                    Spacer()
+                
+                //                    Button(action: {
+                //                        if(emojiCount<emojis.count){
+                //                            emojiCount = emojiCount + 1
+                //                        }
+                //                        viewModel.addCardPair()
+                //                    }, label: {
+                //                        Image(systemName: "plus.circle").font(.largeTitle)
+                //                    })
+                //                }
+                
+//                Image(systemName: "shuffle.circle").font(.largeTitle).foregroundColor(.blue).onTapGesture {
+//                    viewModel.shuffleCards()
+//                }
+                
             }.padding()
+        }else{
+            VStack{
+                Text("Wohooo!! Game Completed").font(.largeTitle)
+                Text("Score: \(viewModel.getTotalMoves())").font(.largeTitle)
+            }
+        }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView().preferredColorScheme(.dark)
+        ContentView(viewModel: MemorizeGameViewModel()).preferredColorScheme(.light)
     }
+}
+
+private struct DrawingConstants{
+    static let cardContentScalingFactor = 0.5
+    static let cardBorderLineWidth:CGFloat = 3
+    static let cardCornerRadius:CGFloat = 15
+    
 }

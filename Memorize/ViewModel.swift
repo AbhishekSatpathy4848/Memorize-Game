@@ -7,15 +7,39 @@
 
 import Foundation
 
-class MemorizeGameViewModel{
+class MemorizeGameViewModel: ObservableObject{
     
     static var emojis = ["🛳","✈️","🚀","⛵️","🏎","🚞","🛺","🛻","🚝","🛴"]
     
     static func createMemoryGame() -> MemorizeGameModel<String>{
-        MemorizeGameModel<String>(numberOfPairsOfCards: 20){index in emojis[index]}
+        
+        var model = MemorizeGameModel<String>(numberOfPairsOfCards: 10){index in emojis[index]}
+        model.shuffleCards()
+        return model
     }
     
-    private var model: MemorizeGameModel = createMemoryGame();
+    @Published private(set) var model: MemorizeGameModel = createMemoryGame()
     
+    // User Intent(s)
+    
+    func chooseCard(_ card: MemorizeGameModel<String>.Card){
+        model.chooseCard(card)
+    }
+    
+//    func addCardPair(){
+//        model.addCardPair(content: MemorizeGameViewModel.emojis[6])
+//    }
+     
+    func isGameFinished() -> Bool{
+        return model.isGameFinished
+    }
+    
+//    func shuffleCards(){
+//        model.shuffleCards()
+//    }
+    
+    func getTotalMoves() -> Int{
+        model.getTotalMoves()
+    }
     
 }
