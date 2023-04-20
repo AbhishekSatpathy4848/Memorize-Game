@@ -19,6 +19,8 @@ struct Card: View{
                         
                         shape.strokeBorder(.red,lineWidth:DrawingConstants.cardBorderLineWidth)
                         
+                        Pie(startAngle: Angle(degrees: -90), endAngle: Angle(degrees:180), clockwise: true).padding(10).foregroundColor(Color.red.opacity(0.5))
+                        
                         Text(cardDetails.content).font(cardContentFontSize(size: geometry.size))
                     }
                     else if cardDetails.isMatched{
@@ -45,15 +47,15 @@ struct ContentView: View {
         if !viewModel.isGameFinished(){
             VStack{
                 ScrollView{
-                    LazyVGrid(columns: [GridItem(.adaptive(minimum: UIScreen.main.bounds.size.width/6))],spacing: 20.0){
+                    LazyVGrid(columns: [GridItem(.adaptive(minimum: UIScreen.main.bounds.size.width/6))],spacing: 10.0){
                         ForEach(viewModel.model.cards, content: {card in
-                            Card(cardDetails: card).aspectRatio(2/3,contentMode: .fit).padding(.leading, 5.0).onTapGesture {
+                            Card(cardDetails: card).aspectRatio(2/3,contentMode: .fit).onTapGesture {
                                 viewModel.chooseCard(card)
-                                
                             }
                         })
                     }
                 }
+                
                 
                 Spacer()
                 

@@ -44,6 +44,7 @@ struct MemorizeGameModel<CardContent> where CardContent: Equatable{
                     }
                 }
                 cards[chosenCardIndex].isFaceUp.toggle()
+//                onlyFaceUpCardIndex = nil
             }else{
                 onlyFaceUpCardIndex = chosenCardIndex
             }
