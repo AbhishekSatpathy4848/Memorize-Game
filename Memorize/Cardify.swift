@@ -17,13 +17,12 @@ struct Cardify: ViewModifier{
             if isFaceUp{
                 shape.fill().foregroundColor(.white)
                 shape.strokeBorder(.red,lineWidth:DrawingConstants.cardBorderLineWidth)
-                content
-            }
-            else if isMatched{
-                shape.opacity(0)
+                
             }else{
-                shape.foregroundColor(.red)
+                shape.fill().foregroundColor(isMatched ? .white : .red)
             }
+//            content.opacity(isMatched || !isFaceUp ? 0:1)
+            content.opacity(isFaceUp ? 1 : 0)
         }
     }
     

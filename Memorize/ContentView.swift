@@ -15,7 +15,10 @@ struct Card: View{
                 ZStack{
                     Pie(startAngle: Angle(degrees: -90), endAngle: Angle(degrees:180), clockwise: true).padding(10).foregroundColor(Color.red.opacity(0.5))
                     
-                    Text(cardDetails.content).font(cardContentFontSize(size: geometry.size))
+                    Text(cardDetails.content)
+                        .rotationEffect(Angle(degrees: cardDetails.isMatched && cardDetails.isFaceUp ? 360 : 0))
+                        .animation(Animation.linear(duration: 1).repeatForever(autoreverses: false))
+                        .font(cardContentFontSize(size: geometry.size))
                 }.cardify(isFaceUp: cardDetails.isFaceUp, isMatched: cardDetails.isMatched)
             })
     }
