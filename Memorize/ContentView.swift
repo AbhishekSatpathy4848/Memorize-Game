@@ -11,24 +11,12 @@ struct Card: View{
     var cardDetails: MemorizeGameModel<String>.Card
     
     var body: some View{
-        let shape = RoundedRectangle(cornerRadius: DrawingConstants.cardCornerRadius);
             GeometryReader(content: {geometry in
                 ZStack{
-                    if cardDetails.isFaceUp{
-                        shape.fill().foregroundColor(.white)
-                        
-                        shape.strokeBorder(.red,lineWidth:DrawingConstants.cardBorderLineWidth)
-                        
-                        Pie(startAngle: Angle(degrees: -90), endAngle: Angle(degrees:180), clockwise: true).padding(10).foregroundColor(Color.red.opacity(0.5))
-                        
-                        Text(cardDetails.content).font(cardContentFontSize(size: geometry.size))
-                    }
-                    else if cardDetails.isMatched{
-                        shape.opacity(0)
-                    }else{
-                        shape.foregroundColor(.red)
-                    }
-                }
+                    Pie(startAngle: Angle(degrees: -90), endAngle: Angle(degrees:180), clockwise: true).padding(10).foregroundColor(Color.red.opacity(0.5))
+                    
+                    Text(cardDetails.content).font(cardContentFontSize(size: geometry.size))
+                }.cardify(isFaceUp: cardDetails.isFaceUp, isMatched: cardDetails.isMatched)
             })
     }
     
@@ -61,31 +49,6 @@ struct ContentView: View {
                 
                 Text("Score: \(viewModel.getTotalMoves())").font(.largeTitle)
                 
-                //                HStack{
-                //                    Button(action: {
-                ////                        if(emojiCount>1){
-                ////                            emojiCount = emojiCount - 1
-                //                        }
-                //                    }, label: {
-                //                        Image(systemName: "minus.circle").font(.largeTitle)
-                //                    })
-                
-                //                    Spacer()
-                
-                //                    Button(action: {
-                //                        if(emojiCount<emojis.count){
-                //                            emojiCount = emojiCount + 1
-                //                        }
-                //                        viewModel.addCardPair()
-                //                    }, label: {
-                //                        Image(systemName: "plus.circle").font(.largeTitle)
-                //                    })
-                //                }
-                
-//                Image(systemName: "shuffle.circle").font(.largeTitle).foregroundColor(.blue).onTapGesture {
-//                    viewModel.shuffleCards()
-//                }
-                
             }.padding()
         }else{
             VStack{
@@ -104,7 +67,4 @@ struct ContentView_Previews: PreviewProvider {
 
 private struct DrawingConstants{
     static let cardContentScalingFactor = 0.5
-    static let cardBorderLineWidth:CGFloat = 3
-    static let cardCornerRadius:CGFloat = 15
-    
 }
